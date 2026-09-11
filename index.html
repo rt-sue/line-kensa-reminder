@@ -101,18 +101,7 @@ async function main() {
       return;
     }
 
-    // 友だち追加を確認・要求
-    try {
-  await liff.requestFriendship();
-} catch (friendshipError) {
-
-  console.error("友だち追加エラー：", friendshipError);
-
-  document.getElementById("message").innerText =
-    "友だち追加処理でエラーが発生しました。\n" +
-    "エラー：" + friendshipError.message;
-}
-
+   
     const profile = await liff.getProfile();
 
     userId = profile.userId;
