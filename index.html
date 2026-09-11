@@ -105,13 +105,20 @@ async function main() {
 
     // 友だち追加を確認・要求
     try {
-  await liff.requestFriendship();
-} catch (friendshipError) {
 
-  console.error("友だち追加エラー：", friendshipError);
+  const friendship = await liff.getFriendship();
 
   document.getElementById("message").innerText =
-    "友だち追加処理でエラーが発生しました。\n" +
+    "友だち状態：" + friendship.friendFlag;
+
+  console.log("友だち状態：", friendship.friendFlag);
+
+} catch (friendshipError) {
+
+  console.error("友だち状態確認エラー：", friendshipError);
+
+  document.getElementById("message").innerText =
+    "友だち状態の確認に失敗しました。\n" +
     "エラー：" + friendshipError.message;
 }
 
