@@ -50,6 +50,10 @@
       color: white;
     }
 
+    button:disabled {
+      background: #999;
+    }
+
     #message {
       margin-top: 20px;
       text-align: center;
@@ -70,7 +74,7 @@
       id="examDate"
     >
 
-    <button onclick="registerExam()">
+    <button id="registerButton" onclick="registerExam()">
       検査日を登録
     </button>
 
@@ -81,6 +85,13 @@
 <script>
 
 const LIFF_ID = "2011561246-fTeZ3OYX";
+
+/* ここにGASのWebアプリURLを入れてください */
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxJtcX1kF2CfhTPHvoiK_aLIV6IAtUz3ypLA1V3LjEY7wdD-DYYntUUKd3WAJsC8cXR2w/exec";
+
+
+let userId = "";
+
 
 async function main() {
 
@@ -94,6 +105,10 @@ async function main() {
       liff.login();
       return;
     }
+
+    const profile = await liff.getProfile();
+
+    userId = profile.userId;
 
   } catch (error) {
 
@@ -112,19 +127,83 @@ async function registerExam() {
   const examDate =
     document.getElementById("examDate").value;
 
+  const message =
+    document.getElementById("message");
+
+  const button =
+    document.getElementById("registerButton");
+
+
   if (!examDate) {
 
-    document.getElementById("message").innerText =
+    message.innerText =
       "検査日を入力してください。";
 
     return;
 
   }
 
-  document.getElementById("message").innerText =
-    "検査日を登録しました。";
 
-  console.log("検査日:", examDate);
+  if (!userId) {
+
+    message.innerText =
+      "LINEユーザー情報を取得できませんでした。";
+
+    return;
+
+  }
+
+
+  button.disabled = true;
+
+  message.innerText =
+    "登録しています……";
+
+
+  try {
+
+    const response = await fetch(GAS_URL, {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "text/plain"
+      },
+
+      body: JSON.stringify({
+        userId: userId,
+        examDate: examDate
+      })
+
+    });
+
+
+    const result = await response.json();
+
+
+    if (result.status === "success") {
+
+      message.innerText =
+        "検査日を登録しました。";
+
+    } else {
+
+      throw new Error(result.message);
+
+    }
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    message.innerText =
+      "登録に失敗しました。";
+
+  }
+
+
+  button.disabled = false;
 
 }
 
