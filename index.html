@@ -4,9 +4,134 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>検査リマインド</title>
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      background: #f7f7f7;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .box {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #06c755;
+      color: white;
+    }
+
+    #message {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
+
   <h1>検査リマインド</h1>
-  <p>このページは正常に表示されています。</p>
+
+  <div class="box">
+
+    <label for="examDate">検査日</label>
+
+    <input
+      type="date"
+      id="examDate"
+    >
+
+    <button onclick="registerExam()">
+      検査日を登録
+    </button>
+
+    <div id="message"></div>
+
+  </div>
+
+<script>
+
+const LIFF_ID = "2011561246-fTeZ3OYX";
+
+async function main() {
+
+  try {
+
+    await liff.init({
+      liffId: LIFF_ID
+    });
+
+    if (!liff.isLoggedIn()) {
+      liff.login();
+      return;
+    }
+
+  } catch (error) {
+
+    document.getElementById("message").innerText =
+      "LINEとの接続に失敗しました。";
+
+    console.error(error);
+
+  }
+
+}
+
+
+async function registerExam() {
+
+  const examDate =
+    document.getElementById("examDate").value;
+
+  if (!examDate) {
+
+    document.getElementById("message").innerText =
+      "検査日を入力してください。";
+
+    return;
+
+  }
+
+  document.getElementById("message").innerText =
+    "検査日を登録しました。";
+
+  console.log("検査日:", examDate);
+
+}
+
+
+main();
+
+</script>
+
 </body>
 </html>
