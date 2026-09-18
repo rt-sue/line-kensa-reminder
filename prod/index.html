@@ -106,6 +106,7 @@
     <div id="message" class="message"></div>
   </div>
 
+
   <div class="box">
     <h2>登録済みの検査日</h2>
 
@@ -114,6 +115,7 @@
     </div>
 
     <div id="changeArea" class="hidden">
+
       <h3>検査日を変更する</h3>
 
       <input type="date" id="newExamDate">
@@ -123,15 +125,16 @@
       </button>
 
       <div id="changeMessage" class="message"></div>
+
     </div>
   </div>
 
 
   <script>
 
-    // =========================
+    // ========================================
     // 設定
-    // =========================
+    // ========================================
 
     const LIFF_ID = "2011636967-XDwuMWl5";
 
@@ -146,9 +149,9 @@
     let oldExamDate = "";
 
 
-    // =========================
+    // ========================================
     // 初期処理
-    // =========================
+    // ========================================
 
     async function main() {
 
@@ -157,12 +160,15 @@
 
       try {
 
-        message.innerText = "読み込み中です…";
+        message.innerText =
+          "読み込み中です…";
+
 
         // LIFF初期化
         await liff.init({
           liffId: LIFF_ID
         });
+
 
         // LINEログイン確認
         if (!liff.isLoggedIn()) {
@@ -172,16 +178,21 @@
           return;
         }
 
+
         // LINEプロフィール取得
         const profile =
           await liff.getProfile();
 
-        userId = profile.userId;
+        userId =
+          profile.userId;
+
 
         // 登録済み検査日の取得
         await loadExamDates();
 
+
         message.innerText = "";
+
 
       } catch (error) {
 
@@ -197,19 +208,21 @@
     }
 
 
-    // =========================
+    // ========================================
     // 登録済み検査日の取得
-    // =========================
+    // ========================================
 
     async function loadExamDates() {
 
       const dateList =
         document.getElementById("dateList");
 
+
       try {
 
         const response =
           await fetch(GAS_URL, {
+
             method: "POST",
 
             headers: {
@@ -217,15 +230,20 @@
             },
 
             body: JSON.stringify({
+
               action: "get",
+
               userId: userId
+
             })
+
           });
 
 
-        // まず文字列として取得
+        // GASからの回答を文字列として取得
         const text =
           await response.text();
+
 
         console.log(
           "GAS response:",
@@ -234,6 +252,7 @@
 
 
         let result;
+
 
         try {
 
@@ -249,7 +268,8 @@
         }
 
 
-        if (!result.success) {
+        // ★ GASの返却形式に合わせる
+        if (result.status !== "success") {
 
           throw new Error(
             result.message ||
@@ -258,9 +278,11 @@
         }
 
 
+        // ★ GASでは dates という名前で返ってくる
         displayExamDates(
-          result.examDates || []
+          result.dates || []
         );
+
 
       } catch (error) {
 
@@ -275,9 +297,9 @@
     }
 
 
-    // =========================
+    // ========================================
     // 登録済み検査日の表示
-    // =========================
+    // ========================================
 
     function displayExamDates(examDates) {
 
@@ -285,8 +307,11 @@
         document.getElementById("dateList");
 
 
-      if (!examDates ||
-          examDates.length === 0) {
+      // 登録なし
+      if (
+        !examDates ||
+        examDates.length === 0
+      ) {
 
         dateList.innerHTML =
           "現在、登録されている検査日はありません。";
@@ -315,14 +340,16 @@
       });
 
 
-      // 変更エリアを表示
-      showChangeArea(examDates[0]);
+      // 最初の検査日を変更対象にする
+      showChangeArea(
+        examDates[0]
+      );
     }
 
 
-    // =========================
+    // ========================================
     // 検査日を登録
-    // =========================
+    // ========================================
 
     async function registerExam() {
 
@@ -360,8 +387,10 @@
           "登録しています…";
 
 
+        // GASへ送信
         const response =
           await fetch(GAS_URL, {
+
             method: "POST",
 
             headers: {
@@ -369,16 +398,22 @@
             },
 
             body: JSON.stringify({
+
               action: "add",
+
               userId: userId,
+
               examDate: examDate
+
             })
+
           });
 
 
-        // まず文字列として取得
+        // GASからの回答
         const text =
           await response.text();
+
 
         console.log(
           "GAS register response:",
@@ -387,6 +422,7 @@
 
 
         let result;
+
 
         try {
 
@@ -402,7 +438,8 @@
         }
 
 
-        if (!result.success) {
+        // ★ GASの返却形式に合わせる
+        if (result.status !== "success") {
 
           throw new Error(
             result.message ||
@@ -411,7 +448,10 @@
         }
 
 
-        // 成功
+        // ========================================
+        // 登録成功
+        // ========================================
+
         message.className =
           "message success";
 
@@ -425,7 +465,7 @@
         ).value = "";
 
 
-        // 登録済みの日付を再読み込み
+        // 登録済み検査日を再読み込み
         await loadExamDates();
 
 
@@ -440,6 +480,7 @@
           "登録に失敗しました。\n\n" +
           error.message;
 
+
       } finally {
 
         button.disabled = false;
@@ -447,9 +488,9 @@
     }
 
 
-    // =========================
+    // ========================================
     // 変更エリア表示
-    // =========================
+    // ========================================
 
     function showChangeArea(date) {
 
@@ -466,9 +507,9 @@
     }
 
 
-    // =========================
-    // 変更する検査日を選択
-    // =========================
+    // ========================================
+    // 変更対象の日付を選択
+    // ========================================
 
     function selectChangeDate(date) {
 
@@ -480,9 +521,9 @@
     }
 
 
-    // =========================
+    // ========================================
     // 検査日を変更
-    // =========================
+    // ========================================
 
     async function changeExam() {
 
@@ -497,6 +538,7 @@
         );
 
 
+      // 入力確認
       if (!newExamDate) {
 
         message.className =
@@ -509,6 +551,7 @@
       }
 
 
+      // 変更対象確認
       if (!oldExamDate) {
 
         message.className =
@@ -530,8 +573,10 @@
           "変更しています…";
 
 
+        // GASへ送信
         const response =
           await fetch(GAS_URL, {
+
             method: "POST",
 
             headers: {
@@ -539,16 +584,24 @@
             },
 
             body: JSON.stringify({
+
               action: "change",
+
               userId: userId,
+
               oldExamDate: oldExamDate,
+
               newExamDate: newExamDate
+
             })
+
           });
 
 
+        // GASからの回答
         const text =
           await response.text();
+
 
         console.log(
           "GAS change response:",
@@ -557,6 +610,7 @@
 
 
         let result;
+
 
         try {
 
@@ -572,7 +626,8 @@
         }
 
 
-        if (!result.success) {
+        // ★ GASの返却形式に合わせる
+        if (result.status !== "success") {
 
           throw new Error(
             result.message ||
@@ -581,6 +636,10 @@
         }
 
 
+        // ========================================
+        // 変更成功
+        // ========================================
+
         message.className =
           "message success";
 
@@ -588,11 +647,13 @@
           "検査日を変更しました。";
 
 
+        // 入力欄をクリア
         document.getElementById(
           "newExamDate"
         ).value = "";
 
 
+        // 登録済み検査日を再読み込み
         await loadExamDates();
 
 
@@ -610,9 +671,9 @@
     }
 
 
-    // =========================
+    // ========================================
     // 日付表示
-    // =========================
+    // ========================================
 
     function formatDate(dateString) {
 
@@ -620,12 +681,15 @@
         return "";
       }
 
+
       const parts =
         dateString.split("-");
+
 
       if (parts.length !== 3) {
         return dateString;
       }
+
 
       return (
         parts[0] +
@@ -638,9 +702,9 @@
     }
 
 
-    // =========================
+    // ========================================
     // 開始
-    // =========================
+    // ========================================
 
     main();
 
