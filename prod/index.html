@@ -439,34 +439,34 @@
 
 
         // ★ GASの返却形式に合わせる
-        if (result.status !== "success") {
+      if (result.status === "success") {
 
-          throw new Error(
-            result.message ||
-            "GAS側で登録に失敗しました。"
-          );
-        }
+  message.className =
+    "message success";
 
+  message.innerText =
+    "検査日を登録しました。";
 
-        // ========================================
-        // 登録成功
-        // ========================================
+  document.getElementById(
+    "examDate"
+  ).value = "";
 
-        message.className =
-          "message success";
+  // 登録済み検査日は後から読み込む
+  try {
+    await loadExamDates();
+  } catch (e) {
+    console.error(e);
+  }
 
-        message.innerText =
-          "検査日を登録しました。";
+} else {
 
+  message.className =
+    "message error";
 
-        // 入力欄をクリア
-        document.getElementById(
-          "examDate"
-        ).value = "";
-
-
-        // 登録済み検査日を再読み込み
-        await loadExamDates();
+  message.innerText =
+    "GASからエラーが返されました。\n\n" +
+    (result.message || JSON.stringify(result));
+}
 
 
       } catch (error) {
