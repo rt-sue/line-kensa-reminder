@@ -521,247 +521,153 @@
     // 検査日登録
     // ========================================
 
-    async function registerExam() {
+async function registerExam() {
 
-      const examDate =
-        document.getElementById("examDate").value;
+  const examDate =
+    document.getElementById("examDate").value;
 
-      const button =
-        document.getElementById("registerButton");
+  const button =
+    document.getElementById("registerButton");
 
-      const message =
-        document.getElementById("registerMessage");
-
-
-      // ========================================
-      // 入力チェック
-      // ========================================
-
-      if (!examDate) {
-
-        message.className =
-          "message error";
-
-        message.innerText =
-          "検査日を選択してください。";
-
-        return;
-
-      }
+  const message =
+    document.getElementById("registerMessage");
 
 
-      if (!userId) {
+  // ========================================
+  // 入力チェック
+  // ========================================
 
-        message.className =
-          "message error";
+  if (!examDate) {
 
-        message.innerText =
-          "LINEユーザー情報を取得できません。\n" +
-          "LINEからもう一度開いてください。";
+    message.className =
+      "message error";
 
-        return;
+    message.innerText =
+      "検査日を選択してください。";
 
-      }
+    return;
 
-
-      // ========================================
-      // ボタン無効化
-      // ========================================
-
-      button.disabled = true;
-
-      button.innerText =
-        "登録しています...";
+  }
 
 
-      message.className =
-        "message info";
+  if (!userId) {
 
-      message.innerText =
-        "検査日を登録しています...";
+    message.className =
+      "message error";
+
+    message.innerText =
+      "LINEユーザー情報を取得できません。\n" +
+      "LINEからもう一度開いてください。";
+
+    return;
+
+  }
 
 
-      try {
+  button.disabled = true;
 
-        console.log(
-          "GASへ登録開始"
-        );
+  button.innerText =
+    "登録しています...";
 
-        console.log({
+
+  message.className =
+    "message info";
+
+  message.innerText =
+    "検査日を登録しています...";
+
+
+  try {
+
+    // ========================================
+    // GASへ登録データを送信
+    // ========================================
+
+    await fetch(
+      GAS_URL,
+      {
+        method: "POST",
+
+        mode: "no-cors",
+
+        headers: {
+          "Content-Type": "text/plain"
+        },
+
+        body: JSON.stringify({
           action: "add",
           userId: userId,
           examDate: examDate
-        });
+        })
+      }
+    );
 
 
-        // ========================================
-        // GASへ送信
-        // ========================================
+    // ========================================
+    // 登録成功
+    // ========================================
 
-        const response =
-          await fetch(
-            GAS_URL,
-            {
-              method: "POST",
+    message.className =
+      "message success";
 
-              headers: {
-                "Content-Type": "text/plain"
-              },
-
-              body: JSON.stringify({
-                action: "add",
-                userId: userId,
-                examDate: examDate
-              })
-            }
-          );
+    message.innerText =
+      "検査日を登録しました。\n\n" +
+      formatJapaneseDate(examDate) +
+      "\n\n" +
+      "検査日の5日前と前日にLINEでお知らせします。";
 
 
-        console.log(
-          "HTTP status:",
-          response.status
-        );
+    // 入力欄をクリア
+    document.getElementById("examDate").value = "";
 
 
-        const responseText =
-          await response.text();
+    // ========================================
+    // 少し待ってから登録済み一覧を更新
+    // ========================================
 
+    setTimeout(function() {
 
-        console.log(
-          "GAS response:",
-          responseText
-        );
-
-
-        if (!responseText) {
-
-          throw new Error(
-            "GASから空の回答が返されました。"
-          );
-
-        }
-
-
-        let result;
-
-        try {
-
-          result =
-            JSON.parse(responseText);
-
-        } catch (e) {
-
-          throw new Error(
-            "GASの回答をJSONとして読み取れませんでした。\n\n" +
-            responseText
-          );
-
-        }
-
-
-        console.log(
-          "GAS result:",
-          result
-        );
-
-
-        // ========================================
-        // 登録成功
-        // ========================================
-
-        if (result.status === "success") {
-
-          message.className =
-            "message success";
-
-          message.innerText =
-            "検査日を登録しました。\n\n" +
-            formatJapaneseDate(examDate);
-
-
-          // 入力欄をクリア
-          document.getElementById("examDate").value = "";
-
-
-          // 登録済み一覧を更新
-          try {
-
-            await loadExamDates();
-
-          } catch (error) {
-
-            console.error(
-              "一覧更新エラー:",
-              error
-            );
-
-          }
-
-
-        } else if (result.status === "duplicate") {
-
-          message.className =
-            "message error";
-
-          message.innerText =
-            result.message ||
-            "この検査日はすでに登録されています。";
-
-
-          // 一覧を更新
-          try {
-
-            await loadExamDates();
-
-          } catch (error) {
-
-            console.error(error);
-
-          }
-
-
-        } else {
-
-          message.className =
-            "message error";
-
-          message.innerText =
-            "登録できませんでした。\n\n" +
-            (result.message ||
-             JSON.stringify(result));
-
-        }
-
-
-      } catch (error) {
+      loadExamDates().catch(function(error) {
 
         console.error(
-          "登録エラー:",
+          "検査日一覧の更新エラー:",
           error
         );
 
+      });
 
-        message.className =
-          "message error";
-
-        message.innerText =
-          "登録に失敗しました。\n\n" +
-          "エラー内容：\n" +
-          getErrorMessage(error);
-
-      }
+    }, 500);
 
 
-      // ========================================
-      // ボタンを元に戻す
-      // ========================================
+  } catch (error) {
 
-      button.disabled = false;
+    console.error(
+      "登録エラー:",
+      error
+    );
 
-      button.innerText =
-        "検査日を登録する";
 
-    }
+    message.className =
+      "message error";
+
+    message.innerText =
+      "登録に失敗しました。\n\n" +
+      "ただし、スプレッドシートに登録されている場合は、" +
+      "登録処理自体は成功しています。";
+
+  }
+
+
+  // ========================================
+  // ボタンを元に戻す
+  // ========================================
+
+  button.disabled = false;
+
+  button.innerText =
+    "検査日を登録する";
+
+}
 
 
     // ========================================
