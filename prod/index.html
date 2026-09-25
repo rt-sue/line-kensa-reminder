@@ -107,12 +107,19 @@
       flex: 1;
     }
 
-    .change-button {
-      background: #555;
-      white-space: nowrap;
-      padding: 8px 14px;
-      font-size: 14px;
-    }
+ .change-button {
+  background: #555;
+  white-space: nowrap;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.cancel-exam-button {
+  background: #d32f2f;
+  white-space: nowrap;
+  padding: 8px 14px;
+  font-size: 14px;
+}
 
     .change-area {
       margin-top: 12px;
@@ -504,15 +511,37 @@
               );
 
             };
+const cancelExamButton =
+  document.createElement("button");
 
+cancelExamButton.className =
+  "cancel-exam-button";
+
+cancelExamButton.innerText =
+  "取り消す";
+
+
+cancelExamButton.onclick =
+  function() {
+
+    showCancelConfirm(
+      li,
+      date
+    );
+
+  };
 
           dateRow.appendChild(
             dateText
           );
 
           dateRow.appendChild(
-            changeButton
-          );
+  changeButton
+);
+
+dateRow.appendChild(
+  cancelExamButton
+);
 
 
           li.appendChild(
@@ -546,7 +575,245 @@
 
     }
 
+// ========================================
+// 検査日の取り消し確認
+// ========================================
 
+function showCancelConfirm(
+  listItem,
+  examDate
+) {
+
+  // すでに開いている確認画面を閉じる
+  const existing =
+    document.querySelector(
+      ".cancel-area"
+    );
+
+  if (existing) {
+    existing.remove();
+  }
+
+
+  // ========================================
+  // 確認エリア
+  // ========================================
+
+  const cancelArea =
+    document.createElement("div");
+
+  cancelArea.className =
+    "change-area cancel-area";
+
+
+  const message =
+    document.createElement("div");
+
+  message.className =
+    "message info";
+
+  message.innerText =
+    formatJapaneseDate(examDate) +
+    "の検査日を取り消しますか？\n\n" +
+    "取り消すと、この検査日のLINE通知も停止されます。";
+
+
+  const confirmButton =
+    document.createElement("button");
+
+  confirmButton.className =
+    "change-confirm-button";
+
+  confirmButton.innerText =
+    "この検査日を取り消す";
+
+
+  const closeButton =
+    document.createElement("button");
+
+  closeButton.className =
+    "cancel-button";
+
+  closeButton.innerText =
+    "キャンセル";
+
+
+  // ========================================
+  // 取り消し確定
+  // ========================================
+
+  confirmButton.onclick =
+    async function() {
+
+      await cancelExam(
+        examDate,
+        confirmButton,
+        closeButton,
+        message
+      );
+
+    };
+
+
+  // ========================================
+  // キャンセル
+  // ========================================
+
+  closeButton.onclick =
+    function() {
+
+      cancelArea.remove();
+
+    };
+
+
+  cancelArea.appendChild(
+    message
+  );
+
+  cancelArea.appendChild(
+    confirmButton
+  );
+
+  cancelArea.appendChild(
+    closeButton
+  );
+
+
+  listItem.appendChild(
+    cancelArea
+  );
+
+}
+
+
+// ========================================
+// 検査日の取り消し
+// ========================================
+
+async function cancelExam(
+  examDate,
+  confirmButton,
+  closeButton,
+  message
+) {
+
+  if (!userId) {
+
+    message.className =
+      "message error";
+
+    message.innerText =
+      "LINEユーザー情報を取得できません。";
+
+    return;
+
+  }
+
+
+  confirmButton.disabled =
+    true;
+
+  closeButton.disabled =
+    true;
+
+
+  message.className =
+    "message info";
+
+  message.innerText =
+    "検査日を取り消しています...";
+
+
+  try {
+
+    // ========================================
+    // GASへ取り消しデータを送信
+    // ========================================
+
+    await fetch(
+      GAS_URL,
+      {
+        method: "POST",
+
+        mode: "no-cors",
+
+        headers: {
+          "Content-Type": "text/plain"
+        },
+
+        body: JSON.stringify({
+
+          action: "cancel",
+
+          userId: userId,
+
+          examDate: examDate
+
+        })
+
+      }
+    );
+
+
+    // ========================================
+    // 取り消し成功
+    // ========================================
+
+    message.className =
+      "message success";
+
+    message.innerText =
+      "検査日を取り消しました。\n\n" +
+      formatJapaneseDate(examDate) +
+      "\n\n" +
+      "この検査日のLINE通知は停止されます。";
+
+
+    // 一覧を更新
+    setTimeout(
+      async function() {
+
+        try {
+
+          await loadExamDates();
+
+        } catch (error) {
+
+          console.error(error);
+
+        }
+
+      },
+      800
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "取り消しエラー:",
+      error
+    );
+
+
+    message.className =
+      "message error";
+
+    message.innerText =
+      "検査日の取り消しに失敗しました。\n\n" +
+      getErrorMessage(error);
+
+
+    confirmButton.disabled =
+      false;
+
+    closeButton.disabled =
+      false;
+
+  }
+
+}
     // ========================================
     // 変更画面を表示
     // ========================================
