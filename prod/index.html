@@ -8,7 +8,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-  <title>検査日登録</title>
+  <title>検査日登録・変更</title>
 
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
@@ -36,14 +36,18 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
+    h2 {
+      font-size: 20px;
+      margin-top: 0;
+    }
+
     label {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
     }
 
-    input[type="date"],
-    select {
+    input[type="date"] {
       width: 100%;
       box-sizing: border-box;
       padding: 12px;
@@ -54,20 +58,82 @@
     }
 
     button {
-      width: 100%;
-      padding: 13px;
-      font-size: 16px;
+      padding: 10px 15px;
+      font-size: 15px;
       border: none;
       border-radius: 8px;
       background: #06c755;
       color: white;
       cursor: pointer;
-      margin-top: 5px;
     }
 
     button:disabled {
       background: #aaa;
       cursor: not-allowed;
+    }
+
+    .register-button {
+      width: 100%;
+      padding: 13px;
+      font-size: 16px;
+      margin-top: 5px;
+    }
+
+    .date-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .date-item {
+      border-bottom: 1px solid #eee;
+      padding: 14px 0;
+    }
+
+    .date-item:last-child {
+      border-bottom: none;
+    }
+
+    .date-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .date-text {
+      font-size: 16px;
+      font-weight: bold;
+      flex: 1;
+    }
+
+    .change-button {
+      background: #555;
+      white-space: nowrap;
+      padding: 8px 14px;
+      font-size: 14px;
+    }
+
+    .change-area {
+      margin-top: 12px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    .change-area input {
+      margin-bottom: 10px;
+    }
+
+    .change-confirm-button {
+      width: 100%;
+      margin-top: 3px;
+    }
+
+    .cancel-button {
+      width: 100%;
+      margin-top: 8px;
+      background: #999;
     }
 
     .message {
@@ -96,17 +162,9 @@
       color: #1565c0;
     }
 
-    .date-list {
-      margin-top: 10px;
-      padding-left: 20px;
-    }
-
-    .date-item {
-      margin-bottom: 8px;
-    }
-
-    .hidden {
-      display: none;
+    .empty-message {
+      color: #666;
+      padding: 10px 0;
     }
 
   </style>
@@ -153,6 +211,7 @@
 
     <button
       id="registerButton"
+      class="register-button"
       onclick="registerExam()"
     >
       検査日を登録する
@@ -160,54 +219,6 @@
 
     <div
       id="registerMessage"
-      class="message"
-    ></div>
-
-  </div>
-
-
-  <!-- ========================= -->
-  <!-- 検査日変更 -->
-  <!-- ========================= -->
-
-  <div
-    class="box"
-    id="changeBox"
-  >
-
-    <h2>検査日を変更</h2>
-
-    <label for="changeDate">
-      変更する検査日
-    </label>
-
-    <select id="changeDate">
-      <option value="">
-        読み込み中です...
-      </option>
-    </select>
-
-
-    <label for="newExamDate">
-      新しい検査日
-    </label>
-
-    <input
-      type="date"
-      id="newExamDate"
-    >
-
-
-    <button
-      id="changeButton"
-      onclick="changeExam()"
-    >
-      検査日を変更する
-    </button>
-
-
-    <div
-      id="changeMessage"
       class="message"
     ></div>
 
@@ -244,38 +255,40 @@
 
       try {
 
-        registerMessage.className = "message info";
+        registerMessage.className =
+          "message info";
 
         registerMessage.innerText =
           "LINE情報を確認しています...";
 
 
-        // LIFF初期化
         await liff.init({
           liffId: LIFF_ID
         });
 
 
-        // LINEログイン
         if (!liff.isLoggedIn()) {
 
           liff.login();
 
           return;
+
         }
 
 
-        // LINEプロフィール取得
         const profile =
           await liff.getProfile();
 
-        userId = profile.userId;
+        userId =
+          profile.userId;
 
 
-        console.log("LINE userId:", userId);
+        console.log(
+          "LINE userId:",
+          userId
+        );
 
 
-        // 登録済み検査日取得
         await loadExamDates();
 
 
@@ -294,7 +307,6 @@
 
         registerMessage.innerText =
           "初期化に失敗しました。\n\n" +
-          "エラー内容：\n" +
           getErrorMessage(error);
 
       }
@@ -303,7 +315,7 @@
 
 
     // ========================================
-    // エラー内容取得
+    // エラー表示
     // ========================================
 
     function getErrorMessage(error) {
@@ -326,16 +338,13 @@
 
 
     // ========================================
-    // 登録済み検査日取得
+    // 登録済み検査日を取得
     // ========================================
 
     async function loadExamDates() {
 
       const examList =
         document.getElementById("examList");
-
-      const changeDate =
-        document.getElementById("changeDate");
 
 
       if (!userId) {
@@ -344,6 +353,7 @@
           "LINEユーザー情報を取得できませんでした。";
 
         return;
+
       }
 
 
@@ -403,12 +413,6 @@
         }
 
 
-        console.log(
-          "GAS result:",
-          result
-        );
-
-
         if (result.status !== "success") {
 
           throw new Error(
@@ -426,80 +430,106 @@
 
 
         // ========================================
-        // 検査日一覧表示
+        // 検査日一覧を表示
         // ========================================
 
         if (dates.length === 0) {
 
-          examList.innerText =
-            "現在、登録されている検査日はありません。";
+          examList.innerHTML =
+            '<div class="empty-message">' +
+            '現在、登録されている検査日はありません。' +
+            '</div>';
 
-        } else {
-
-          examList.innerHTML = "";
-
-          const ul =
-            document.createElement("ul");
-
-          ul.className = "date-list";
-
-
-          dates.forEach(function(date) {
-
-            const li =
-              document.createElement("li");
-
-            li.className = "date-item";
-
-            li.innerText =
-              formatJapaneseDate(date);
-
-            ul.appendChild(li);
-
-          });
-
-
-          examList.appendChild(ul);
+          return;
 
         }
 
 
-        // ========================================
-        // 変更用プルダウン
-        // ========================================
-
-        changeDate.innerHTML = "";
+        examList.innerHTML = "";
 
 
-        if (dates.length === 0) {
+        const ul =
+          document.createElement("ul");
 
-          const option =
-            document.createElement("option");
+        ul.className =
+          "date-list";
 
-          option.value = "";
 
-          option.textContent =
-            "変更できる検査日はありません";
+        dates.forEach(function(date) {
 
-          changeDate.appendChild(option);
+          const li =
+            document.createElement("li");
 
-        } else {
+          li.className =
+            "date-item";
 
-          dates.forEach(function(date) {
 
-            const option =
-              document.createElement("option");
+          // ========================================
+          // 日付＋変更ボタン
+          // ========================================
 
-            option.value = date;
+          const dateRow =
+            document.createElement("div");
 
-            option.textContent =
-              formatJapaneseDate(date);
+          dateRow.className =
+            "date-row";
 
-            changeDate.appendChild(option);
 
-          });
+          const dateText =
+            document.createElement("div");
 
-        }
+          dateText.className =
+            "date-text";
+
+          dateText.innerText =
+            formatJapaneseDate(date);
+
+
+          const changeButton =
+            document.createElement("button");
+
+          changeButton.className =
+            "change-button";
+
+          changeButton.innerText =
+            "変更";
+
+
+          changeButton.onclick =
+            function() {
+
+              showChangeArea(
+                li,
+                date
+              );
+
+            };
+
+
+          dateRow.appendChild(
+            dateText
+          );
+
+          dateRow.appendChild(
+            changeButton
+          );
+
+
+          li.appendChild(
+            dateRow
+          );
+
+
+          ul.appendChild(
+            li
+          );
+
+        });
+
+
+        examList.appendChild(
+          ul
+        );
 
 
       } catch (error) {
@@ -518,193 +548,158 @@
 
 
     // ========================================
-    // 検査日登録
+    // 変更画面を表示
     // ========================================
 
-async function registerExam() {
+    function showChangeArea(
+      listItem,
+      oldExamDate
+    ) {
 
-  const examDate =
-    document.getElementById("examDate").value;
-
-  const button =
-    document.getElementById("registerButton");
-
-  const message =
-    document.getElementById("registerMessage");
-
-
-  // ========================================
-  // 入力チェック
-  // ========================================
-
-  if (!examDate) {
-
-    message.className =
-      "message error";
-
-    message.innerText =
-      "検査日を選択してください。";
-
-    return;
-
-  }
-
-
-  if (!userId) {
-
-    message.className =
-      "message error";
-
-    message.innerText =
-      "LINEユーザー情報を取得できません。\n" +
-      "LINEからもう一度開いてください。";
-
-    return;
-
-  }
-
-
-  button.disabled = true;
-
-  button.innerText =
-    "登録しています...";
-
-
-  message.className =
-    "message info";
-
-  message.innerText =
-    "検査日を登録しています...";
-
-
-  try {
-
-    // ========================================
-    // GASへ登録データを送信
-    // ========================================
-
-    await fetch(
-      GAS_URL,
-      {
-        method: "POST",
-
-        mode: "no-cors",
-
-        headers: {
-          "Content-Type": "text/plain"
-        },
-
-        body: JSON.stringify({
-          action: "add",
-          userId: userId,
-          examDate: examDate
-        })
-      }
-    );
-
-
-    // ========================================
-    // 登録成功
-    // ========================================
-
-    message.className =
-      "message success";
-
-    message.innerText =
-      "検査日を登録しました。\n\n" +
-      formatJapaneseDate(examDate) +
-      "\n\n" +
-      "検査日の5日前と前日にLINEでお知らせします。";
-
-
-    // 入力欄をクリア
-    document.getElementById("examDate").value = "";
-
-
-    // ========================================
-    // 少し待ってから登録済み一覧を更新
-    // ========================================
-
-    setTimeout(function() {
-
-      loadExamDates().catch(function(error) {
-
-        console.error(
-          "検査日一覧の更新エラー:",
-          error
+      // すでに開いている変更画面を閉じる
+      const existing =
+        document.querySelector(
+          ".change-area"
         );
 
-      });
-
-    }, 500);
-
-
-  } catch (error) {
-
-    console.error(
-      "登録エラー:",
-      error
-    );
+      if (existing) {
+        existing.remove();
+      }
 
 
-    message.className =
-      "message error";
+      // ========================================
+      // 変更エリア
+      // ========================================
 
-    message.innerText =
-      "登録に失敗しました。\n\n" +
-      "ただし、スプレッドシートに登録されている場合は、" +
-      "登録処理自体は成功しています。";
+      const changeArea =
+        document.createElement("div");
 
-  }
+      changeArea.className =
+        "change-area";
 
 
-  // ========================================
-  // ボタンを元に戻す
-  // ========================================
+      const label =
+        document.createElement("label");
 
-  button.disabled = false;
+      label.innerText =
+        "新しい検査日";
 
-  button.innerText =
-    "検査日を登録する";
 
-}
+      const input =
+        document.createElement("input");
+
+      input.type =
+        "date";
+
+      input.className =
+        "change-date-input";
+
+
+      const confirmButton =
+        document.createElement("button");
+
+      confirmButton.className =
+        "change-confirm-button";
+
+      confirmButton.innerText =
+        "この日付に変更する";
+
+
+      const cancelButton =
+        document.createElement("button");
+
+      cancelButton.className =
+        "cancel-button";
+
+      cancelButton.innerText =
+        "キャンセル";
+
+
+      const message =
+        document.createElement("div");
+
+      message.className =
+        "message";
+
+
+      // ========================================
+      // 変更ボタン
+      // ========================================
+
+      confirmButton.onclick =
+        async function() {
+
+          await changeExam(
+            oldExamDate,
+            input.value,
+            confirmButton,
+            cancelButton,
+            message
+          );
+
+        };
+
+
+      // ========================================
+      // キャンセル
+      // ========================================
+
+      cancelButton.onclick =
+        function() {
+
+          changeArea.remove();
+
+        };
+
+
+      changeArea.appendChild(
+        label
+      );
+
+      changeArea.appendChild(
+        input
+      );
+
+      changeArea.appendChild(
+        confirmButton
+      );
+
+      changeArea.appendChild(
+        cancelButton
+      );
+
+      changeArea.appendChild(
+        message
+      );
+
+
+      listItem.appendChild(
+        changeArea
+      );
+
+
+      // 日付入力を自動で開く
+      input.focus();
+
+    }
 
 
     // ========================================
     // 検査日変更
     // ========================================
 
-    async function changeExam() {
-
-      const oldExamDate =
-        document.getElementById("changeDate").value;
-
-      const newExamDate =
-        document.getElementById("newExamDate").value;
-
-      const button =
-        document.getElementById("changeButton");
-
-      const message =
-        document.getElementById("changeMessage");
+    async function changeExam(
+      oldExamDate,
+      newExamDate,
+      confirmButton,
+      cancelButton,
+      message
+    ) {
 
 
       // ========================================
       // 入力チェック
       // ========================================
-
-      if (!oldExamDate) {
-
-        message.className =
-          "message error";
-
-        message.innerText =
-          "変更する検査日を選択してください。";
-
-        return;
-
-      }
-
 
       if (!newExamDate) {
 
@@ -713,19 +708,6 @@ async function registerExam() {
 
         message.innerText =
           "新しい検査日を選択してください。";
-
-        return;
-
-      }
-
-
-      if (!userId) {
-
-        message.className =
-          "message error";
-
-        message.innerText =
-          "LINEユーザー情報を取得できません。";
 
         return;
 
@@ -745,10 +727,24 @@ async function registerExam() {
       }
 
 
-      button.disabled = true;
+      if (!userId) {
 
-      button.innerText =
-        "変更しています...";
+        message.className =
+          "message error";
+
+        message.innerText =
+          "LINEユーザー情報を取得できません。";
+
+        return;
+
+      }
+
+
+      confirmButton.disabled =
+        true;
+
+      cancelButton.disabled =
+        true;
 
 
       message.className =
@@ -760,113 +756,70 @@ async function registerExam() {
 
       try {
 
-        const response =
-          await fetch(
-            GAS_URL,
-            {
-              method: "POST",
+        // ========================================
+        // GASへ変更データを送信
+        // ========================================
 
-              headers: {
-                "Content-Type": "text/plain"
-              },
+        await fetch(
+          GAS_URL,
+          {
+            method: "POST",
 
-              body: JSON.stringify({
-                action: "change",
-                userId: userId,
-                oldExamDate: oldExamDate,
-                newExamDate: newExamDate
-              })
-            }
-          );
+            mode: "no-cors",
 
+            headers: {
+              "Content-Type": "text/plain"
+            },
 
-        const responseText =
-          await response.text();
+            body: JSON.stringify({
 
+              action: "change",
 
-        console.log(
-          "GAS change response:",
-          responseText
+              userId: userId,
+
+              oldExamDate: oldExamDate,
+
+              newExamDate: newExamDate
+
+            })
+
+          }
         );
 
 
-        if (!responseText) {
+        // ========================================
+        // 変更成功
+        // ========================================
 
-          throw new Error(
-            "GASから空の回答が返されました。"
-          );
+        message.className =
+          "message success";
 
-        }
-
-
-        let result;
-
-        try {
-
-          result =
-            JSON.parse(responseText);
-
-        } catch (e) {
-
-          throw new Error(
-            "GASの回答をJSONとして読み取れませんでした。\n\n" +
-            responseText
-          );
-
-        }
+        message.innerText =
+          "検査日を変更しました。\n\n" +
+          "変更前： " +
+          formatJapaneseDate(oldExamDate) +
+          "\n" +
+          "変更後： " +
+          formatJapaneseDate(newExamDate);
 
 
-        if (result.status === "success") {
+        // 少し待って一覧を更新
+        setTimeout(
+          async function() {
 
-          message.className =
-            "message success";
+            try {
 
-          message.innerText =
-            "検査日を変更しました。\n\n" +
-            "変更前： " +
-            formatJapaneseDate(oldExamDate) +
-            "\n" +
-            "変更後： " +
-            formatJapaneseDate(newExamDate);
+              await loadExamDates();
 
+            } catch (error) {
 
-          document.getElementById(
-            "newExamDate"
-          ).value = "";
+              console.error(error);
 
+            }
 
-          try {
-
-            await loadExamDates();
-
-          } catch (error) {
-
-            console.error(error);
-
-          }
-
-
-        } else if (result.status === "duplicate") {
-
-          message.className =
-            "message error";
-
-          message.innerText =
-            result.message ||
-            "変更後の検査日はすでに登録されています。";
-
-
-        } else {
-
-          message.className =
-            "message error";
-
-          message.innerText =
-            "変更できませんでした。\n\n" +
-            (result.message ||
-             JSON.stringify(result));
-
-        }
+          },
+          800
+        );
 
 
       } catch (error) {
@@ -881,17 +834,174 @@ async function registerExam() {
           "message error";
 
         message.innerText =
-          "変更に失敗しました。\n\n" +
-          "エラー内容：\n" +
+          "検査日の変更に失敗しました。\n\n" +
           getErrorMessage(error);
+
+        confirmButton.disabled =
+          false;
+
+        cancelButton.disabled =
+          false;
+
+      }
+
+    }
+
+
+    // ========================================
+    // 新規検査日登録
+    // ========================================
+
+    async function registerExam() {
+
+      const examDate =
+        document.getElementById("examDate").value;
+
+      const button =
+        document.getElementById(
+          "registerButton"
+        );
+
+      const message =
+        document.getElementById(
+          "registerMessage"
+        );
+
+
+      if (!examDate) {
+
+        message.className =
+          "message error";
+
+        message.innerText =
+          "検査日を選択してください。";
+
+        return;
 
       }
 
 
-      button.disabled = false;
+      if (!userId) {
+
+        message.className =
+          "message error";
+
+        message.innerText =
+          "LINEユーザー情報を取得できません。\n" +
+          "LINEからもう一度開いてください。";
+
+        return;
+
+      }
+
+
+      button.disabled =
+        true;
 
       button.innerText =
-        "検査日を変更する";
+        "登録しています...";
+
+
+      message.className =
+        "message info";
+
+      message.innerText =
+        "検査日を登録しています...";
+
+
+      try {
+
+        // ========================================
+        // GASへ登録
+        // ========================================
+
+        await fetch(
+          GAS_URL,
+          {
+            method: "POST",
+
+            mode: "no-cors",
+
+            headers: {
+              "Content-Type": "text/plain"
+            },
+
+            body: JSON.stringify({
+
+              action: "add",
+
+              userId: userId,
+
+              examDate: examDate
+
+            })
+
+          }
+        );
+
+
+        // ========================================
+        // 登録成功
+        // ========================================
+
+        message.className =
+          "message success";
+
+        message.innerText =
+          "検査日を登録しました。\n\n" +
+          formatJapaneseDate(examDate) +
+          "\n\n" +
+          "検査日の5日前と前日にLINEでお知らせします。";
+
+
+        document.getElementById(
+          "examDate"
+        ).value = "";
+
+
+        // 一覧更新
+        setTimeout(
+          async function() {
+
+            try {
+
+              await loadExamDates();
+
+            } catch (error) {
+
+              console.error(error);
+
+            }
+
+          },
+          500
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "登録エラー:",
+          error
+        );
+
+
+        message.className =
+          "message error";
+
+        message.innerText =
+          "登録に失敗しました。\n\n" +
+          "ただし、スプレッドシートに登録されている場合は、" +
+          "登録処理自体は成功しています。";
+
+      }
+
+
+      button.disabled =
+        false;
+
+      button.innerText =
+        "検査日を登録する";
 
     }
 
@@ -900,7 +1010,9 @@ async function registerExam() {
     // 日付表示
     // ========================================
 
-    function formatJapaneseDate(dateString) {
+    function formatJapaneseDate(
+      dateString
+    ) {
 
       if (!dateString) {
         return "";
