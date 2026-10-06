@@ -5,8 +5,10 @@
 
   <meta charset="UTF-8">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>検査日登録・変更</title>
 
@@ -19,214 +21,102 @@
       max-width: 500px;
       margin: 0 auto;
       padding: 20px;
-      background: #f7f7f7;
+      color: #333;
+      background: #fff;
     }
 
     h1 {
-      text-align: center;
       font-size: 24px;
-      margin-bottom: 25px;
-    }
-
-    .box {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
     h2 {
-      font-size: 20px;
-      margin-top: 0;
+      font-size: 18px;
+      margin-top: 25px;
     }
 
-    label {
-      display: block;
-      margin-bottom: 8px;
+    .qr-info {
+      border: 2px solid #06c755;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background: #f7fff9;
+    }
+
+    .qr-info-title {
+      font-weight: bold;
+      color: #06c755;
+      margin-bottom: 10px;
+    }
+
+    .qr-row {
+      margin: 6px 0;
+      line-height: 1.5;
+    }
+
+    .qr-label {
       font-weight: bold;
     }
 
     input[type="date"],
-    input[type="time"],
-    input[type="text"] {
+    input[type="time"] {
       width: 100%;
       box-sizing: border-box;
       padding: 12px;
       font-size: 16px;
+      margin: 8px 0 12px;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-bottom: 15px;
-    }
-
-    input[readonly] {
-      background: #f5f5f5;
-      color: #333;
+      border-radius: 6px;
     }
 
     button {
-      padding: 10px 15px;
-      font-size: 15px;
-      border: none;
-      border-radius: 8px;
-      background: #06c755;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-    }
-
-    .register-button {
       width: 100%;
       padding: 13px;
       font-size: 16px;
-      margin-top: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 8px;
     }
 
-    .date-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .date-item {
-      border-bottom: 1px solid #eee;
-      padding: 14px 0;
-    }
-
-    .date-item:last-child {
-      border-bottom: none;
-    }
-
-    .date-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .date-text {
-      font-size: 16px;
-      font-weight: bold;
-      flex: 1;
+    .register-button {
+      background: #06c755;
+      color: white;
     }
 
     .change-button {
-      background: #555;
-      white-space: nowrap;
-      padding: 8px 14px;
-      font-size: 14px;
-    }
-
-    .cancel-exam-button {
-      background: #d32f2f;
-      white-space: nowrap;
-      padding: 8px 14px;
-      font-size: 14px;
-    }
-
-    .change-area {
-      margin-top: 12px;
-      padding: 15px;
-      background: #f5f5f5;
-      border-radius: 8px;
-    }
-
-    .change-area input {
-      margin-bottom: 10px;
-    }
-
-    .change-confirm-button {
-      width: 100%;
-      margin-top: 3px;
+      background: #4285f4;
+      color: white;
     }
 
     .cancel-button {
-      width: 100%;
-      margin-top: 8px;
-      background: #999;
+      background: #e53935;
+      color: white;
+      margin-top: 5px;
+    }
+
+    .date-item {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .date-text {
+      font-weight: bold;
+      margin-bottom: 8px;
     }
 
     .message {
       margin-top: 15px;
       padding: 12px;
-      border-radius: 8px;
+      border-radius: 6px;
+      background: #f1f1f1;
       white-space: pre-wrap;
+    }
+
+    .hidden {
       display: none;
-    }
-
-    .success {
-      display: block;
-      background: #e8f5e9;
-      color: #2e7d32;
-    }
-
-    .error {
-      display: block;
-      background: #ffebee;
-      color: #c62828;
-    }
-
-    .info {
-      display: block;
-      background: #e3f2fd;
-      color: #1565c0;
-    }
-
-    .empty-message {
-      color: #666;
-      padding: 10px 0;
-    }
-
-    /* ========================================
-       QRから読み込んだ検査情報
-       ======================================== */
-
-    .qr-info {
-      background: #fff;
-      border: 2px solid #06c755;
-      padding: 18px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-
-    .qr-info-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-
-    .qr-info-row {
-      margin-bottom: 12px;
-    }
-
-    .qr-info-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .qr-info-label {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 4px;
-    }
-
-    .qr-info-value {
-      font-size: 16px;
-      font-weight: bold;
-      word-break: break-word;
-    }
-
-    .qr-badge {
-      display: inline-block;
-      background: #06c755;
-      color: white;
-      padding: 4px 9px;
-      border-radius: 12px;
-      font-size: 12px;
-      margin-bottom: 10px;
     }
 
   </style>
@@ -239,186 +129,129 @@
   <h1>検査日を登録・変更</h1>
 
 
-  <!-- ========================= -->
-  <!-- QRから取得した検査情報 -->
-  <!-- ========================= -->
+  <!-- ========================================
+       QRから読み込んだ検査情報
+       ======================================== -->
 
   <div
     id="qrInfo"
-    class="qr-info"
-    style="display:none;"
+    class="qr-info hidden"
   >
 
-    <div class="qr-badge">
+    <div class="qr-info-title">
       QRから検査情報を読み込みました
     </div>
 
-    <div class="qr-info-title">
-      検査情報
-    </div>
-
-
-    <div class="qr-info-row">
-
-      <div class="qr-info-label">
-        検査日
-      </div>
-
-      <div
-        id="qrExamDate"
-        class="qr-info-value"
-      ></div>
-
-    </div>
-
-
-    <div class="qr-info-row">
-
-      <div class="qr-info-label">
-        検査時間
-      </div>
-
-      <div
-        id="qrExamTime"
-        class="qr-info-value"
-      ></div>
-
-    </div>
-
-
-    <div class="qr-info-row">
-
-      <div class="qr-info-label">
-        カテゴリー
-      </div>
-
-      <div
-        id="qrCategory"
-        class="qr-info-value"
-      ></div>
-
-    </div>
-
-
-    <div class="qr-info-row">
-
-      <div class="qr-info-label">
-        検査名
-      </div>
-
-      <div
-        id="qrExamName"
-        class="qr-info-value"
-      ></div>
-
-    </div>
-
-  </div>
-
-
-  <!-- ========================= -->
-  <!-- 登録済み検査日 -->
-  <!-- ========================= -->
-
-  <div class="box">
-
-    <h2>登録されている検査日</h2>
-
-    <div id="examList">
-      読み込み中です...
-    </div>
-
-  </div>
-
-
-  <!-- ========================= -->
-  <!-- 新規登録 -->
-  <!-- ========================= -->
-
-  <div class="box">
-
-    <h2>新しい検査日を登録</h2>
-
-    <label for="examDate">
-      検査日
-    </label>
-
-    <input
-      type="date"
-      id="examDate"
+    <div
+      id="qrExamNameRow"
+      class="qr-row"
     >
+      <span class="qr-label">検査：</span>
+      <span id="qrExamName"></span>
+    </div>
 
-
-    <!-- QRから取得した値を保持 -->
-    <input
-      type="hidden"
-      id="examTime"
-    >
-
-    <input
-      type="hidden"
-      id="category"
-    >
-
-    <input
-      type="hidden"
-      id="examName"
-    >
-
-
-    <button
-      id="registerButton"
-      class="register-button"
-      onclick="registerExam()"
-    >
-      検査日を登録する
-    </button>
-
+    <div class="qr-row">
+      <span class="qr-label">検査日：</span>
+      <span id="qrExamDate"></span>
+    </div>
 
     <div
-      id="registerMessage"
-      class="message"
-    ></div>
+      id="qrExamTimeRow"
+      class="qr-row"
+    >
+      <span class="qr-label">予約時間：</span>
+      <span id="qrExamTime"></span>
+    </div>
+
+    <div
+      id="qrCategoryRow"
+      class="qr-row"
+    >
+      <span class="qr-label">カテゴリー：</span>
+      <span id="qrCategory"></span>
+    </div>
 
   </div>
+
+
+  <!-- ========================================
+       登録済み検査日
+       ======================================== -->
+
+  <h2>登録済みの検査日</h2>
+
+  <div id="examDateList">
+    読み込み中です…
+  </div>
+
+
+  <!-- ========================================
+       検査日登録
+       ======================================== -->
+
+  <h2>新しい検査日を登録</h2>
+
+  <input
+    type="date"
+    id="examDate"
+  >
+
+  <!-- QR情報保持用 -->
+  <input
+    type="hidden"
+    id="examTime"
+  >
+
+  <input
+    type="hidden"
+    id="category"
+  >
+
+  <input
+    type="hidden"
+    id="examName"
+  >
+
+  <button
+    class="register-button"
+    onclick="registerExam()"
+  >
+    この検査日を登録
+  </button>
+
+
+  <!-- ========================================
+       メッセージ
+       ======================================== -->
+
+  <div
+    id="message"
+    class="message hidden"
+  ></div>
 
 
   <script>
 
     // ========================================
-    // 設定
+    // 本番設定
     // ========================================
-
-    /*
-     * 本番LIFF ID
-     *
-     * LINE Developersに登録されている
-     * 本番LIFF IDと一致させる
-     */
 
     const LIFF_ID =
       "2011636967-x6RIKZwu";
-
-
-    /*
-     * 本番GAS
-     *
-     * 既存の本番GASをそのまま使用
-     */
 
     const GAS_URL =
       "https://script.google.com/macros/s/AKfycbxJtcX1kF2CfhTPHvoiK_aLIV6IAtUz3ypLA1V3LjEY7wdD-DYYntUUKd3WAJsC8cXR2w/exec";
 
 
     // ========================================
-    // LINEユーザーID
+    // ユーザー情報
     // ========================================
 
     let userId = "";
 
 
     // ========================================
-    // QRから取得する検査情報
+    // QR情報
     // ========================================
 
     let qrExamDate = "";
@@ -428,328 +261,394 @@
 
 
     // ========================================
-    // URLパラメータを取得
-    // ========================================
-
-    function readQRParameters() {
-
-      /*
-       * LIFFの初期化後に呼び出す
-       *
-       * 例：
-       *
-       * ?examDate=2026-11-01
-       * &examTime=07%3A00
-       * &category=核医学
-       * &examName=脳線条体［FP-CIT］シンチ
-       */
-
-      const params =
-        new URLSearchParams(
-          window.location.search
-        );
-
-
-      qrExamDate =
-        params.get("examDate") || "";
-
-
-      qrExamTime =
-        params.get("examTime") || "";
-
-
-      qrCategory =
-        params.get("category") || "";
-
-
-      qrExamName =
-        params.get("examName") || "";
-
-
-      console.log(
-        "QR検査日:",
-        qrExamDate
-      );
-
-      console.log(
-        "QR検査時間:",
-        qrExamTime
-      );
-
-      console.log(
-        "QRカテゴリー:",
-        qrCategory
-      );
-
-      console.log(
-        "QR検査名:",
-        qrExamName
-      );
-
-    }
-
-
-    // ========================================
-    // QR情報を画面に表示
-    // ========================================
-
-    function applyQRParameters() {
-
-      /*
-       * QRパラメータが1つもない場合は
-       * 通常の検査日登録画面として動作
-       */
-
-      if (
-        !qrExamDate &&
-        !qrExamTime &&
-        !qrCategory &&
-        !qrExamName
-      ) {
-
-        return;
-
-      }
-
-
-      // ========================================
-      // 検査日
-      // ========================================
-
-      if (qrExamDate) {
-
-        document.getElementById(
-          "examDate"
-        ).value = qrExamDate;
-
-        document.getElementById(
-          "qrExamDate"
-        ).innerText =
-          formatJapaneseDate(qrExamDate);
-
-      }
-
-
-      // ========================================
-      // 検査時間
-      // ========================================
-
-      if (qrExamTime) {
-
-        document.getElementById(
-          "examTime"
-        ).value = qrExamTime;
-
-        document.getElementById(
-          "qrExamTime"
-        ).innerText =
-          qrExamTime;
-
-      }
-
-
-      // ========================================
-      // カテゴリー
-      // ========================================
-
-      if (qrCategory) {
-
-        document.getElementById(
-          "category"
-        ).value = qrCategory;
-
-        document.getElementById(
-          "qrCategory"
-        ).innerText =
-          qrCategory;
-
-      }
-
-
-      // ========================================
-      // 検査名
-      // ========================================
-
-      if (qrExamName) {
-
-        document.getElementById(
-          "examName"
-        ).value = qrExamName;
-
-        document.getElementById(
-          "qrExamName"
-        ).innerText =
-          qrExamName;
-
-      }
-
-
-      // ========================================
-      // QR情報エリアを表示
-      // ========================================
-
-      document.getElementById(
-        "qrInfo"
-      ).style.display = "block";
-
-    }
-
-
-    // ========================================
-    // LINEユーザーID
+    // 初期処理
     // ========================================
 
     async function main() {
 
-      const registerMessage =
-        document.getElementById(
-          "registerMessage"
-        );
-
-
       try {
 
-        registerMessage.className =
-          "message info";
-
-        registerMessage.innerText =
-          "LINE情報を確認しています...";
-
-
-        // ========================================
         // LIFF初期化
-        // ========================================
-
         await liff.init({
           liffId: LIFF_ID
         });
 
 
-        // ========================================
+        // LINEログイン
+        if (!liff.isLoggedIn()) {
+
+          liff.login();
+
+          return;
+        }
+
+
+        // ユーザー情報取得
+        const profile =
+          await liff.getProfile();
+
+        userId =
+          profile.userId;
+
+
+        // ----------------------------------------
         // QRパラメータ取得
-        //
-        // 必ずLIFF初期化後に実行
-        // ========================================
+        // ※LIFF init後に取得する
+        // ----------------------------------------
 
         readQRParameters();
 
         applyQRParameters();
 
 
-        // ========================================
-        // LINEログイン確認
-        // ========================================
-
-        if (!liff.isLoggedIn()) {
-
-          liff.login();
-
-          return;
-
-        }
-
-
-        // ========================================
-        // LINEプロフィール取得
-        // ========================================
-
-        const profile =
-          await liff.getProfile();
-
-
-        userId =
-          profile.userId;
-
-
-        console.log(
-          "LINE userId:",
-          userId
-        );
-
-
-        // ========================================
+        // ----------------------------------------
         // 登録済み検査日取得
-        // ========================================
+        // ----------------------------------------
 
         await loadExamDates();
-
-
-        registerMessage.className =
-          "message";
-
-        registerMessage.innerText = "";
-
 
       } catch (error) {
 
         console.error(error);
 
-
-        registerMessage.className =
-          "message error";
-
-
-        registerMessage.innerText =
-          "初期化に失敗しました。\n\n" +
-          getErrorMessage(error);
-
+        showMessage(
+          "エラーが発生しました。\n" +
+          error.message
+        );
       }
 
     }
 
 
     // ========================================
-    // エラー表示
+    // QRパラメータ取得
     // ========================================
 
-    function getErrorMessage(error) {
+    function readQRParameters() {
 
-      if (!error) {
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
 
-        return "原因不明のエラーです。";
+      qrExamDate =
+        params.get("examDate") || "";
 
-      }
+      qrExamTime =
+        params.get("examTime") || "";
 
+      qrCategory =
+        params.get("category") || "";
 
-      if (error.message) {
-
-        return error.message;
-
-      }
-
-
-      try {
-
-        return JSON.stringify(error);
-
-      } catch (e) {
-
-        return String(error);
-
-      }
-
+      qrExamName =
+        params.get("examName") || "";
     }
 
 
     // ========================================
-    // 登録済み検査日を取得
+    // QRパラメータを画面へ反映
+    // ========================================
+
+    function applyQRParameters() {
+
+      const hasQRData =
+        qrExamDate ||
+        qrExamTime ||
+        qrCategory ||
+        qrExamName;
+
+      if (!hasQRData) {
+        return;
+      }
+
+
+      // 日付
+      if (qrExamDate) {
+
+        document
+          .getElementById("examDate")
+          .value = qrExamDate;
+
+        document
+          .getElementById("qrExamDate")
+          .textContent =
+            formatDisplayDate(qrExamDate);
+      }
+
+
+      // 時間
+      if (qrExamTime) {
+
+        document
+          .getElementById("examTime")
+          .value =
+            qrExamTime;
+
+        document
+          .getElementById("qrExamTime")
+          .textContent =
+            qrExamTime;
+
+      } else {
+
+        document
+          .getElementById("qrExamTimeRow")
+          .classList
+          .add("hidden");
+      }
+
+
+      // カテゴリー
+      if (qrCategory) {
+
+        document
+          .getElementById("category")
+          .value =
+            qrCategory;
+
+        document
+          .getElementById("qrCategory")
+          .textContent =
+            qrCategory;
+
+      } else {
+
+        document
+          .getElementById("qrCategoryRow")
+          .classList
+          .add("hidden");
+      }
+
+
+      // 検査名
+      if (qrExamName) {
+
+        document
+          .getElementById("examName")
+          .value =
+            qrExamName;
+
+        document
+          .getElementById("qrExamName")
+          .textContent =
+            qrExamName;
+
+      } else {
+
+        document
+          .getElementById("qrExamNameRow")
+          .classList
+          .add("hidden");
+      }
+
+
+      // QR情報表示
+      document
+        .getElementById("qrInfo")
+        .classList
+        .remove("hidden");
+    }
+
+
+    // ========================================
+    // 検査日一覧取得
     // ========================================
 
     async function loadExamDates() {
 
-      const examList =
-        document.getElementById(
-          "examList"
+      try {
+
+        const response =
+          await fetch(
+            GAS_URL,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "text/plain;charset=utf-8"
+              },
+
+              body: JSON.stringify({
+                action: "get",
+                userId: userId
+              })
+            }
+          );
+
+        const result =
+          await response.json();
+
+        if (
+          result.status !== "success"
+        ) {
+
+          throw new Error(
+            result.message ||
+            "検査日の取得に失敗しました。"
+          );
+        }
+
+        displayExamDates(
+          result.dates || []
         );
 
+      } catch (error) {
 
-      if (!userId) {
+        console.error(error);
 
-        examList.innerText =
-          "LINEユーザー情報を取得できませんでした。";
+        document
+          .getElementById("examDateList")
+          .textContent =
+            "検査日の取得に失敗しました。";
+      }
+    }
+
+
+    // ========================================
+    // 検査日表示
+    // ========================================
+
+    function displayExamDates(
+      dates
+    ) {
+
+      const container =
+        document.getElementById(
+          "examDateList"
+        );
+
+      container.innerHTML = "";
+
+      if (
+        !dates ||
+        dates.length === 0
+      ) {
+
+        container.textContent =
+          "現在登録されている検査日はありません。";
 
         return;
+      }
 
+
+      dates.forEach(
+        function(date) {
+
+          const item =
+            document.createElement(
+              "div"
+            );
+
+          item.className =
+            "date-item";
+
+
+          const dateText =
+            document.createElement(
+              "div"
+            );
+
+          dateText.className =
+            "date-text";
+
+          dateText.textContent =
+            formatDisplayDate(date);
+
+
+          // 変更ボタン
+          const changeButton =
+            document.createElement(
+              "button"
+            );
+
+          changeButton.className =
+            "change-button";
+
+          changeButton.textContent =
+            "変更";
+
+          changeButton.onclick =
+            function() {
+
+              changeExam(date);
+            };
+
+
+          // 取消ボタン
+          const cancelButton =
+            document.createElement(
+              "button"
+            );
+
+          cancelButton.className =
+            "cancel-button";
+
+          cancelButton.textContent =
+            "取り消す";
+
+          cancelButton.onclick =
+            function() {
+
+              cancelExam(date);
+            };
+
+
+          item.appendChild(
+            dateText
+          );
+
+          item.appendChild(
+            changeButton
+          );
+
+          item.appendChild(
+            cancelButton
+          );
+
+          container.appendChild(
+            item
+          );
+
+        }
+      );
+    }
+
+
+    // ========================================
+    // 検査日登録
+    // ========================================
+
+    async function registerExam() {
+
+      const examDate =
+        document
+          .getElementById("examDate")
+          .value;
+
+      const examTime =
+        document
+          .getElementById("examTime")
+          .value;
+
+      const category =
+        document
+          .getElementById("category")
+          .value;
+
+      const examName =
+        document
+          .getElementById("examName")
+          .value;
+
+
+      if (!examDate) {
+
+        showMessage(
+          "検査日を入力してください。"
+        );
+
+        return;
       }
 
 
@@ -762,420 +661,212 @@
               method: "POST",
 
               headers: {
-                "Content-Type": "text/plain"
+                "Content-Type":
+                  "text/plain;charset=utf-8"
               },
 
               body: JSON.stringify({
 
-                action: "get",
+                action: "add",
 
-                userId: userId
+                userId: userId,
 
+                examDate: examDate,
+
+                examTime: examTime,
+
+                category: category,
+
+                examName: examName
               })
-
             }
           );
 
 
-        const responseText =
-          await response.text();
+        const result =
+          await response.json();
 
 
-        console.log(
-          "GAS response:",
-          responseText
-        );
+        if (
+          result.status === "duplicate"
+        ) {
 
-
-        if (!responseText) {
-
-          throw new Error(
-            "GASから空の回答が返されました。"
+          showMessage(
+            "この検査日はすでに登録されています。"
           );
 
-        }
-
-
-        let result;
-
-
-        try {
-
-          result =
-            JSON.parse(responseText);
-
-        } catch (e) {
-
-          throw new Error(
-            "GASの回答をJSONとして読み取れませんでした。\n\n" +
-            responseText
-          );
-
+          return;
         }
 
 
         if (
-          result.status !==
-          "success"
+          result.status !== "success"
         ) {
 
           throw new Error(
             result.message ||
-            "検査日取得でエラーが発生しました。"
+            "登録に失敗しました。"
           );
-
         }
 
 
-        const dates =
-          Array.isArray(
-            result.dates
-          )
-            ? result.dates
-            : [];
-
-
-        // ========================================
-        // 検査日一覧
-        // ========================================
-
-        if (dates.length === 0) {
-
-          examList.innerHTML =
-            '<div class="empty-message">' +
-            '現在、登録されている検査日はありません。' +
-            '</div>';
-
-          return;
-
-        }
-
-
-        examList.innerHTML = "";
-
-
-        const ul =
-          document.createElement(
-            "ul"
-          );
-
-
-        ul.className =
-          "date-list";
-
-
-        dates.forEach(
-          function(date) {
-
-            const li =
-              document.createElement(
-                "li"
-              );
-
-
-            li.className =
-              "date-item";
-
-
-            // ========================================
-            // 日付＋ボタン
-            // ========================================
-
-            const dateRow =
-              document.createElement(
-                "div"
-              );
-
-
-            dateRow.className =
-              "date-row";
-
-
-            const dateText =
-              document.createElement(
-                "div"
-              );
-
-
-            dateText.className =
-              "date-text";
-
-
-            dateText.innerText =
-              formatJapaneseDate(
-                date
-              );
-
-
-            // ========================================
-            // 変更ボタン
-            // ========================================
-
-            const changeButton =
-              document.createElement(
-                "button"
-              );
-
-
-            changeButton.className =
-              "change-button";
-
-
-            changeButton.innerText =
-              "変更";
-
-
-            changeButton.onclick =
-              function() {
-
-                showChangeArea(
-                  li,
-                  date
-                );
-
-              };
-
-
-            // ========================================
-            // 取り消しボタン
-            // ========================================
-
-            const cancelExamButton =
-              document.createElement(
-                "button"
-              );
-
-
-            cancelExamButton.className =
-              "cancel-exam-button";
-
-
-            cancelExamButton.innerText =
-              "取り消す";
-
-
-            cancelExamButton.onclick =
-              function() {
-
-                showCancelConfirm(
-                  li,
-                  date
-                );
-
-              };
-
-
-            dateRow.appendChild(
-              dateText
-            );
-
-
-            dateRow.appendChild(
-              changeButton
-            );
-
-
-            dateRow.appendChild(
-              cancelExamButton
-            );
-
-
-            li.appendChild(
-              dateRow
-            );
-
-
-            ul.appendChild(
-              li
-            );
-
-          }
+        showMessage(
+          "検査日を登録しました。"
         );
 
 
-        examList.appendChild(
-          ul
-        );
+        // 入力欄をクリア
+        document
+          .getElementById("examDate")
+          .value = "";
+
+
+        // 一覧更新
+        await loadExamDates();
 
 
       } catch (error) {
 
         console.error(error);
 
-
-        examList.innerText =
-          "検査日の取得に失敗しました。\n\n" +
-          getErrorMessage(error);
-
-
-        throw error;
-
+        showMessage(
+          "登録に失敗しました。\n" +
+          error.message
+        );
       }
-
     }
 
 
     // ========================================
-    // 検査日の取り消し確認
+    // 検査日の変更
     // ========================================
 
-    function showCancelConfirm(
-      listItem,
-      examDate
+    async function changeExam(
+      oldExamDate
     ) {
 
-      const existing =
-        document.querySelector(
-          ".cancel-area"
+      const newExamDate =
+        prompt(
+          "新しい検査日を入力してください。\n\n" +
+          "現在：" +
+          formatDisplayDate(oldExamDate),
+          oldExamDate
         );
 
 
-      if (existing) {
-
-        existing.remove();
-
+      if (!newExamDate) {
+        return;
       }
 
 
-      const cancelArea =
-        document.createElement(
-          "div"
+      if (
+        !/^\d{4}-\d{2}-\d{2}$/.test(
+          newExamDate
+        )
+      ) {
+
+        alert(
+          "日付はYYYY-MM-DD形式で入力してください。"
         );
 
-
-      cancelArea.className =
-        "change-area cancel-area";
-
-
-      const message =
-        document.createElement(
-          "div"
-        );
+        return;
+      }
 
 
-      message.className =
-        "message info";
+      try {
 
+        const response =
+          await fetch(
+            GAS_URL,
+            {
+              method: "POST",
 
-      message.innerText =
-        formatJapaneseDate(
-          examDate
-        ) +
-        "の検査日を取り消しますか？\n\n" +
-        "取り消すと、この検査日のLINE通知も停止されます。";
+              headers: {
+                "Content-Type":
+                  "text/plain;charset=utf-8"
+              },
 
+              body: JSON.stringify({
 
-      const confirmButton =
-        document.createElement(
-          "button"
-        );
+                action: "change",
 
+                userId: userId,
 
-      confirmButton.className =
-        "change-confirm-button";
+                oldExamDate:
+                  oldExamDate,
 
-
-      confirmButton.innerText =
-        "この検査日を取り消す";
-
-
-      const closeButton =
-        document.createElement(
-          "button"
-        );
-
-
-      closeButton.className =
-        "cancel-button";
-
-
-      closeButton.innerText =
-        "キャンセル";
-
-
-      confirmButton.onclick =
-        async function() {
-
-          await cancelExam(
-            examDate,
-            confirmButton,
-            closeButton,
-            message
+                newExamDate:
+                  newExamDate
+              })
+            }
           );
 
-        };
+
+        const result =
+          await response.json();
 
 
-      closeButton.onclick =
-        function() {
+        if (
+          result.status === "duplicate"
+        ) {
 
-          cancelArea.remove();
+          alert(
+            "変更後の検査日はすでに登録されています。"
+          );
 
-        };
-
-
-      cancelArea.appendChild(
-        message
-      );
-
-
-      cancelArea.appendChild(
-        confirmButton
-      );
+          return;
+        }
 
 
-      cancelArea.appendChild(
-        closeButton
-      );
+        if (
+          result.status !== "success"
+        ) {
+
+          throw new Error(
+            result.message ||
+            "変更に失敗しました。"
+          );
+        }
 
 
-      listItem.appendChild(
-        cancelArea
-      );
+        showMessage(
+          "検査日を変更しました。"
+        );
 
+
+        await loadExamDates();
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+          "変更に失敗しました。\n" +
+          error.message
+        );
+      }
     }
 
 
     // ========================================
-    // 検査日の取り消し
+    // 検査日の取消
     // ========================================
 
     async function cancelExam(
-      examDate,
-      confirmButton,
-      closeButton,
-      message
+      examDate
     ) {
 
-      if (!userId) {
-
-        message.className =
-          "message error";
-
-
-        message.innerText =
-          "LINEユーザー情報を取得できません。";
+      const confirmed =
+        confirm(
+          "次の検査日を取り消しますか？\n\n" +
+          formatDisplayDate(examDate)
+        );
 
 
+      if (!confirmed) {
         return;
-
       }
-
-
-      confirmButton.disabled =
-        true;
-
-
-      closeButton.disabled =
-        true;
-
-
-      message.className =
-        "message info";
-
-
-      message.innerText =
-        "検査日を取り消しています...";
 
 
       try {
@@ -1188,7 +879,8 @@
             mode: "no-cors",
 
             headers: {
-              "Content-Type": "text/plain"
+              "Content-Type":
+                "text/plain;charset=utf-8"
             },
 
             body: JSON.stringify({
@@ -1198,524 +890,20 @@
               userId: userId,
 
               examDate: examDate
-
             })
-
           }
         );
 
 
-        message.className =
-          "message success";
+        showMessage(
+          "検査日を取り消しました。"
+        );
 
 
-        message.innerText =
-          "検査日を取り消しました。\n\n" +
-          formatJapaneseDate(
-            examDate
-          ) +
-          "\n\n" +
-          "この検査日のLINE通知は停止されます。";
-
-
+        // 少し待ってから再取得
         setTimeout(
-          async function() {
-
-            try {
-
-              await loadExamDates();
-
-            } catch (error) {
-
-              console.error(error);
-
-            }
-
-          },
-          800
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "取り消しエラー:",
-          error
-        );
-
-
-        message.className =
-          "message error";
-
-
-        message.innerText =
-          "検査日の取り消しに失敗しました。\n\n" +
-          getErrorMessage(error);
-
-
-        confirmButton.disabled =
-          false;
-
-
-        closeButton.disabled =
-          false;
-
-      }
-
-    }
-
-
-    // ========================================
-    // 変更画面
-    // ========================================
-
-    function showChangeArea(
-      listItem,
-      oldExamDate
-    ) {
-
-      const existing =
-        document.querySelector(
-          ".change-area"
-        );
-
-
-      if (existing) {
-
-        existing.remove();
-
-      }
-
-
-      const changeArea =
-        document.createElement(
-          "div"
-        );
-
-
-      changeArea.className =
-        "change-area";
-
-
-      const label =
-        document.createElement(
-          "label"
-        );
-
-
-      label.innerText =
-        "新しい検査日";
-
-
-      const input =
-        document.createElement(
-          "input"
-        );
-
-
-      input.type =
-        "date";
-
-
-      input.className =
-        "change-date-input";
-
-
-      const confirmButton =
-        document.createElement(
-          "button"
-        );
-
-
-      confirmButton.className =
-        "change-confirm-button";
-
-
-      confirmButton.innerText =
-        "この日付に変更する";
-
-
-      const cancelButton =
-        document.createElement(
-          "button"
-        );
-
-
-      cancelButton.className =
-        "cancel-button";
-
-
-      cancelButton.innerText =
-        "キャンセル";
-
-
-      const message =
-        document.createElement(
-          "div"
-        );
-
-
-      message.className =
-        "message";
-
-
-      confirmButton.onclick =
-        async function() {
-
-          await changeExam(
-            oldExamDate,
-            input.value,
-            confirmButton,
-            cancelButton,
-            message
-          );
-
-        };
-
-
-      cancelButton.onclick =
-        function() {
-
-          changeArea.remove();
-
-        };
-
-
-      changeArea.appendChild(
-        label
-      );
-
-
-      changeArea.appendChild(
-        input
-      );
-
-
-      changeArea.appendChild(
-        confirmButton
-      );
-
-
-      changeArea.appendChild(
-        cancelButton
-      );
-
-
-      changeArea.appendChild(
-        message
-      );
-
-
-      listItem.appendChild(
-        changeArea
-      );
-
-
-      input.focus();
-
-    }
-
-
-    // ========================================
-    // 検査日変更
-    // ========================================
-
-    async function changeExam(
-      oldExamDate,
-      newExamDate,
-      confirmButton,
-      cancelButton,
-      message
-    ) {
-
-      if (!newExamDate) {
-
-        message.className =
-          "message error";
-
-
-        message.innerText =
-          "新しい検査日を選択してください。";
-
-
-        return;
-
-      }
-
-
-      if (
-        oldExamDate ===
-        newExamDate
-      ) {
-
-        message.className =
-          "message error";
-
-
-        message.innerText =
-          "変更前と変更後の検査日が同じです。";
-
-
-        return;
-
-      }
-
-
-      if (!userId) {
-
-        message.className =
-          "message error";
-
-
-        message.innerText =
-          "LINEユーザー情報を取得できません。";
-
-
-        return;
-
-      }
-
-
-      confirmButton.disabled =
-        true;
-
-
-      cancelButton.disabled =
-        true;
-
-
-      message.className =
-        "message info";
-
-
-      message.innerText =
-        "検査日を変更しています...";
-
-
-      try {
-
-        await fetch(
-          GAS_URL,
-          {
-            method: "POST",
-
-            mode: "no-cors",
-
-            headers: {
-              "Content-Type": "text/plain"
-            },
-
-            body: JSON.stringify({
-
-              action: "change",
-
-              userId: userId,
-
-              oldExamDate:
-                oldExamDate,
-
-              newExamDate:
-                newExamDate
-
-            })
-
-          }
-        );
-
-
-        message.className =
-          "message success";
-
-
-        message.innerText =
-          "検査日を変更しました。\n\n" +
-          "変更前： " +
-          formatJapaneseDate(
-            oldExamDate
-          ) +
-          "\n" +
-          "変更後： " +
-          formatJapaneseDate(
-            newExamDate
-          );
-
-
-        setTimeout(
-          async function() {
-
-            try {
-
-              await loadExamDates();
-
-            } catch (error) {
-
-              console.error(error);
-
-            }
-
-          },
-          800
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "変更エラー:",
-          error
-        );
-
-
-        message.className =
-          "message error";
-
-
-        message.innerText =
-          "検査日の変更に失敗しました。\n\n" +
-          getErrorMessage(error);
-
-
-        confirmButton.disabled =
-          false;
-
-
-        cancelButton.disabled =
-          false;
-
-      }
-
-    }
-
-
-    // ========================================
-    // 新規検査日登録
-    // ========================================
-
-    async function registerExam() {
-
-      const examDate =
-        document.getElementById(
-          "examDate"
-        ).value;
-
-
-      const button =
-        document.getElementById(
-          "registerButton"
-        );
-
-
-      const message =
-        document.getElementById(
-          "registerMessage"
-        );
-
-
-      if (!examDate) {
-
-        message.className =
-          "message error";
-
-
-        message.innerText =
-          "検査日を選択してください。";
-
-
-        return;
-
-      }
-
-
-      if (!userId) {
-
-        message.className =
-          "message error";
-
-
-        message.innerText =
-          "LINEユーザー情報を取得できません。\n" +
-          "LINEからもう一度開いてください。";
-
-
-        return;
-
-      }
-
-
-      button.disabled =
-        true;
-
-
-      button.innerText =
-        "登録しています...";
-
-
-      message.className =
-        "message info";
-
-
-      message.innerText =
-        "検査日を登録しています...";
-
-
-      try {
-
-        await fetch(
-          GAS_URL,
-          {
-            method: "POST",
-
-            mode: "no-cors",
-
-            headers: {
-              "Content-Type": "text/plain"
-            },
-
-            body: JSON.stringify({
-
-              action: "add",
-
-              userId: userId,
-
-              examDate: examDate
-
-            })
-
-          }
-        );
-
-
-        message.className =
-          "message success";
-
-
-        message.innerText =
-          "検査日を登録しました。\n\n" +
-          formatJapaneseDate(
-            examDate
-          ) +
-          "\n\n" +
-          "検査日の5日前と前日にLINEでお知らせします。";
-
-
-        document.getElementById(
-          "examDate"
-        ).value = "";
-
-
-        setTimeout(
-          async function() {
-
-            try {
-
-              await loadExamDates();
-
-            } catch (error) {
-
-              console.error(error);
-
-            }
-
+          function() {
+            loadExamDates();
           },
           500
         );
@@ -1723,31 +911,12 @@
 
       } catch (error) {
 
-        console.error(
-          "登録エラー:",
-          error
+        console.error(error);
+
+        showMessage(
+          "取り消し処理でエラーが発生しました。"
         );
-
-
-        message.className =
-          "message error";
-
-
-        message.innerText =
-          "登録に失敗しました。\n\n" +
-          "ただし、スプレッドシートに登録されている場合は、" +
-          "登録処理自体は成功しています。";
-
       }
-
-
-      button.disabled =
-        false;
-
-
-      button.innerText =
-        "検査日を登録する";
-
     }
 
 
@@ -1755,59 +924,51 @@
     // 日付表示
     // ========================================
 
-    function formatJapaneseDate(
+    function formatDisplayDate(
       dateString
     ) {
 
       if (!dateString) {
-
         return "";
-
       }
-
 
       const parts =
-        String(
-          dateString
-        ).split("-");
+        dateString.split("-");
 
-
-      if (
-        parts.length !== 3
-      ) {
-
-        return String(
-          dateString
-        );
-
+      if (parts.length !== 3) {
+        return dateString;
       }
 
-
-      const year =
-        parts[0];
-
-
-      const month =
-        Number(
-          parts[1]
-        );
-
-
-      const day =
-        Number(
-          parts[2]
-        );
-
-
       return (
-        year +
+        parts[0] +
         "年" +
-        month +
+        Number(parts[1]) +
         "月" +
-        day +
+        Number(parts[2]) +
         "日"
       );
+    }
 
+
+    // ========================================
+    // メッセージ表示
+    // ========================================
+
+    function showMessage(
+      text
+    ) {
+
+      const element =
+        document.getElementById(
+          "message"
+        );
+
+      element.textContent =
+        text;
+
+      element.classList.remove(
+        "hidden"
+      );
     }
 
 
@@ -1815,10 +976,7 @@
     // 起動
     // ========================================
 
-    window.addEventListener(
-      "load",
-      main
-    );
+    main();
 
   </script>
 
