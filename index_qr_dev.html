@@ -211,7 +211,14 @@ async function main() {
       "examName"
     ).value = examName;
 
-
+status.innerText =
+  "③ 検査情報を読み込みました\n\n" +
+  "現在のURL:\n" +
+  window.location.href + "\n\n" +
+  "examDate: " + examDate + "\n" +
+  "examTime: " + examTime + "\n" +
+  "category: " + category + "\n" +
+  "examName: " + examName;
     status.innerText =
       "③ 検査情報を読み込みました";
 
