@@ -815,16 +815,17 @@ async function confirmChangeDate() {
 
   try {
     const response = await fetch(GAS_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        action: "change",
-        userId: userId,
-        oldDate: oldDate,
-        newDate: newDate
-      })
+  method: "POST",
+  headers: {
+    "Content-Type": "text/plain;charset=utf-8"
+  },
+  body: JSON.stringify({
+    action: "change",
+    userId: userId,
+    oldExamDate: oldDate,
+    newExamDate: newDate
+  })
+});
     });
 
     const result = await response.json();
