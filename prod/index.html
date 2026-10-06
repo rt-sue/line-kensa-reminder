@@ -184,6 +184,60 @@
   </style>
 </head>
 
+```html
+<!-- 検査日変更カレンダー -->
+<div id="changeDateDialog"
+     style="display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.45);
+            z-index:9999;
+            align-items:center;
+            justify-content:center;">
+
+  <div style="background:white;
+              padding:24px;
+              border-radius:12px;
+              width:calc(100% - 48px);
+              max-width:360px;
+              box-sizing:border-box;">
+
+    <h3 style="margin-top:0;">検査日の変更</h3>
+
+    <label for="newExamDate"
+           style="display:block;margin-bottom:8px;">
+      変更後の検査日を選択してください
+    </label>
+
+    <input type="date"
+           id="newExamDate"
+           style="width:100%;
+                  box-sizing:border-box;
+                  padding:12px;
+                  font-size:16px;
+                  margin-bottom:20px;">
+
+    <div style="display:flex;gap:10px;">
+      <button type="button"
+              onclick="closeChangeDateDialog()"
+              style="flex:1;padding:12px;">
+        キャンセル
+      </button>
+
+      <button type="button"
+              onclick="confirmChangeDate()"
+              style="flex:1;padding:12px;
+                     background:#06c755;
+                     color:white;
+                     border:none;
+                     border-radius:6px;">
+        変更する
+      </button>
+    </div>
+
+  </div>
+</div>
+```
 
 <body>
 
@@ -1141,143 +1195,89 @@ async function registerExam() {
 }
 
 
+```javascript
 /************************************************************
- * 検査日変更
+ * 検査日変更：カレンダー選択
  ************************************************************/
 
-async function changeExam(
-  oldDate
-) {
+let changingOldDate = "";
 
-  const newDate =
-    prompt(
-      "変更後の検査日を入力してください。\n\n" +
-      "例：2026-10-20",
-      oldDate
-    );
+async function changeExam(oldDate) {
+  changingOldDate = oldDate;
 
+  const dateInput = document.getElementById("newExamDate");
 
-  /*
-   * キャンセル
-   */
+  // 変更前の日付を初期値にする
+  dateInput.value = oldDate;
+
+  // 過去の日付を選べないようにする
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  dateInput.min = `${year}-${month}-${day}`;
+
+  document.getElementById("changeDateDialog").style.display = "flex";
+}
+
+function closeChangeDateDialog() {
+  document.getElementById("changeDateDialog").style.display = "none";
+  changingOldDate = "";
+}
+
+async function confirmChangeDate() {
+  const dateInput = document.getElementById("newExamDate");
+  const newDate = dateInput.value;
 
   if (!newDate) {
-
+    alert("変更後の検査日を選択してください。");
     return;
-
   }
 
-
-  /*
-   * 日付形式チェック
-   */
-
-  if (
-    !/^\d{4}-\d{2}-\d{2}$/.test(
-      newDate
-    )
-  ) {
-
-    alert(
-      "日付は YYYY-MM-DD の形式で入力してください。"
-    );
-
+  if (newDate === changingOldDate) {
+    alert("変更前と同じ日付です。別の日付を選択してください。");
     return;
-
   }
 
+  const oldDate = changingOldDate;
+
+  closeChangeDateDialog();
 
   try {
+    const response = await fetch(GAS_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "change",
+        userId: userId,
+        oldDate: oldDate,
+        newDate: newDate
+      })
+    });
 
-    const response =
-      await fetch(
-        GAS_URL,
-        {
+    const result = await response.json();
 
-          method: "POST",
+    console.log("変更結果:", result);
 
-          headers: {
-            "Content-Type":
-              "text/plain;charset=utf-8"
-          },
-
-          body: JSON.stringify({
-
-            action: "change",
-
-            userId: userId,
-
-            oldDate: oldDate,
-
-            newDate: newDate
-
-          })
-
-        }
-      );
-
-
-    const result =
-      await response.json();
-
-
-    console.log(
-      "変更結果:",
-      result
-    );
-
-
-    /*
-     * 成功
-     */
-
-    if (
-      result.status === "success"
-    ) {
-
+    if (result.status === "success") {
+      showMessage("検査日を変更しました。", "success");
+      await loadExamDates();
+    } else {
       showMessage(
-        "検査日を変更しました。",
-        "success"
-      );
-
-
-      /*
-       * 一覧を更新
-       */
-
-      loadExamDates();
-
-    }
-
-
-    /*
-     * エラー
-     */
-
-    else {
-
-      showMessage(
-        result.message ||
-        "変更に失敗しました。",
+        result.message || "変更に失敗しました。",
         "error"
       );
-
     }
 
-
   } catch (error) {
-
     console.error(error);
-
-
-    showMessage(
-      "変更中にエラーが発生しました。",
-      "error"
-    );
-
+    showMessage("変更中にエラーが発生しました。", "error");
   }
-
 }
+```
 
 
 /************************************************************
