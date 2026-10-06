@@ -184,6 +184,7 @@
   </style>
 </head>
 
+<body>
 ```html
 <!-- 検査日変更カレンダー -->
 <div id="changeDateDialog"
@@ -204,10 +205,7 @@
 
     <h3 style="margin-top:0;">検査日の変更</h3>
 
-    <label for="newExamDate"
-           style="display:block;margin-bottom:8px;">
-      変更後の検査日を選択してください
-    </label>
+    <label for="newExamDate">変更後の検査日</label>
 
     <input type="date"
            id="newExamDate"
@@ -215,7 +213,7 @@
                   box-sizing:border-box;
                   padding:12px;
                   font-size:16px;
-                  margin-bottom:20px;">
+                  margin:10px 0 20px;">
 
     <div style="display:flex;gap:10px;">
       <button type="button"
@@ -234,12 +232,9 @@
         変更する
       </button>
     </div>
-
   </div>
 </div>
 ```
-
-<body>
 
 <div class="container">
 
