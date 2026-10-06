@@ -483,6 +483,10 @@ async function loadExamDates() {
     '<div class="loading">読み込み中です…</div>';
 
   try {
+    console.log("① 検査日取得開始");
+    console.log("userId:", userId);
+    console.log("GAS_URL:", GAS_URL);
+
     const response = await fetch(GAS_URL, {
       method: "POST",
       headers: {
@@ -494,9 +498,24 @@ async function loadExamDates() {
       })
     });
 
-    const result = await response.json();
+    console.log("② GASから応答あり");
+    console.log("HTTP status:", response.status);
 
-    console.log("登録済み検査:", result);
+    const text = await response.text();
+
+    console.log("③ GAS応答内容:", text);
+
+    let result;
+
+    try {
+      result = JSON.parse(text);
+    } catch (jsonError) {
+      throw new Error(
+        "GASから正しいJSONが返ってきませんでした。"
+      );
+    }
+
+    console.log("④ 登録済み検査:", result);
 
     if (result.status !== "success") {
       throw new Error(
@@ -504,18 +523,24 @@ async function loadExamDates() {
       );
     }
 
+    console.log("⑤ 検査日表示開始");
+
     displayExamDates(result.exams || []);
 
+    console.log("⑥ 検査日表示完了");
+
   } catch (error) {
-    console.error(error);
+    console.error("検査日取得エラー:", error);
 
     container.textContent =
       "登録済みの検査日を取得できませんでした。";
 
-    showMessage(error.message, "error");
+    showMessage(
+      error.message || "検査日の取得に失敗しました。",
+      "error"
+    );
   }
 }
-
 
 /************************************************************
  * 登録済み検査を表示
