@@ -1,52 +1,245 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>検査リマインド QR開発</title>
 
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+
+    body {
+      font-family: sans-serif;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f7f7f7;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 25px;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 15px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    #status {
+      padding: 12px;
+      margin-bottom: 20px;
+      background: #e3f2fd;
+      border-radius: 8px;
+    }
+
+  </style>
+
 </head>
 
 <body>
 
-<h1>検査リマインド QR開発</h1>
+  <h1>検査リマインド</h1>
 
-<div id="status">初期化しています...</div>
+  <div id="status">
+    LIFFを初期化しています...
+  </div>
+
+  <div class="box">
+
+    <label for="examDate">
+      検査日
+    </label>
+
+    <input
+      type="date"
+      id="examDate"
+    >
+
+    <label for="examTime">
+      検査時刻
+    </label>
+
+    <input
+      type="time"
+      id="examTime"
+    >
+
+    <label for="category">
+      カテゴリー
+    </label>
+
+    <input
+      type="text"
+      id="category"
+    >
+
+    <label for="examName">
+      検査名
+    </label>
+
+    <input
+      type="text"
+      id="examName"
+    >
+
+  </div>
+
 
 <script>
 
 const LIFF_ID = "2011636967-BdVceko1";
 
+
 async function main() {
 
-  const status = document.getElementById("status");
+  const status =
+    document.getElementById("status");
+
 
   try {
 
-    status.innerText = "① LIFF初期化開始";
+    status.innerText =
+      "① LIFF初期化開始";
+
+
+    // ========================================
+    // LIFF初期化
+    // ========================================
 
     await liff.init({
       liffId: LIFF_ID
     });
 
+
     status.innerText =
-      "② LIFF初期化成功\n\n" +
-      "LIFF ID: " + LIFF_ID;
+      "② LIFF初期化成功";
+
+
+    // ========================================
+    // URLパラメータ取得
+    // ========================================
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const examDate =
+      params.get("examDate") || "";
+
+
+    const examTime =
+      params.get("examTime") || "";
+
+
+    const category =
+      params.get("category") || "";
+
+
+    const examName =
+      params.get("examName") || "";
+
+
+    console.log(
+      "examDate:",
+      examDate
+    );
+
+    console.log(
+      "examTime:",
+      examTime
+    );
+
+    console.log(
+      "category:",
+      category
+    );
+
+    console.log(
+      "examName:",
+      examName
+    );
+
+
+    // ========================================
+    // フォームへ入力
+    // ========================================
+
+    document.getElementById(
+      "examDate"
+    ).value = examDate;
+
+
+    document.getElementById(
+      "examTime"
+    ).value = examTime;
+
+
+    document.getElementById(
+      "category"
+    ).value = category;
+
+
+    document.getElementById(
+      "examName"
+    ).value = examName;
+
+
+    status.innerText =
+      "③ 検査情報を読み込みました";
+
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "LIFF初期化エラー:",
+      error
+    );
+
 
     status.innerText =
       "❌ LIFF初期化エラー\n\n" +
-      (error.message || String(error));
+      (
+        error.message ||
+        String(error)
+      );
 
   }
 
 }
 
-window.addEventListener("load", main);
+
+window.addEventListener(
+  "load",
+  main
+);
 
 </script>
 
